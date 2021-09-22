@@ -6,6 +6,7 @@ export function login(email, password) {
 }
 export function register(user) {
   return http.post(apiUrl + "/owner", {
+    id: user.id,
     email: user.email,
     firstName: user.password,
     lastName: user.name,

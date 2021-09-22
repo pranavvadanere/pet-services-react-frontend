@@ -6,6 +6,7 @@ import * as authService from "../services/loginService";
 class RegisterForm extends Form {
   state = {
     data: {
+      id: "",
       email: "",
       firstName: "",
       lastName: "",
@@ -18,6 +19,7 @@ class RegisterForm extends Form {
   };
 
   schema = {
+    id: Joi.number().integer().required().label("id"),
     email: Joi.string().required().email().label("Email"),
     firstName: Joi.string().required().min(2).label("First Name"),
     lastName: Joi.string().required().min(2).label("Last Name"),
@@ -29,6 +31,7 @@ class RegisterForm extends Form {
 
   doSubmit = async () => {
     try {
+      console.log(this.state.data);
       let res = await authService.register(this.state.data);
       window.location = "/";
     } catch (ex) {
@@ -45,6 +48,7 @@ class RegisterForm extends Form {
       <div>
         <h1>Register</h1>
         <form onSubmit={this.handleSubmit}>
+          {this.renderInput("id", "id", "number")}
           {this.renderInput("email", "Email")}
           {this.renderInput("firstName", "First Name")}
           {this.renderInput("lastName", "LastName")}
