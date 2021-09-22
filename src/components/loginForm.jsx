@@ -1,24 +1,24 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
-
+import * as authService from "../services/loginService";
 class LoginForm extends Form {
   state = {
     data: { username: "", password: "" },
-    errors: {}
+    errors: {},
   };
 
   schema = {
-    username: Joi.string()
-      .required()
-      .label("Username"),
-    password: Joi.string()
-      .required()
-      .label("Password")
+    username: Joi.string().required().label("Username"),
+    password: Joi.string().required().label("Password"),
   };
 
   doSubmit = () => {
-    // Call the server
+    try{
+      const resp = await authService.login();
+      localStorage.setItem("email",JSON.stringify(resp.data.username));
+    }
+    catch
     console.log("Submitted");
   };
 
