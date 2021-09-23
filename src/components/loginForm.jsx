@@ -4,22 +4,30 @@ import Form from "./common/form";
 import * as authService from "../services/loginService";
 class LoginForm extends Form {
   state = {
-    data: { username: "", password: "" },
+    data: { email: "", password: "" },
     errors: {},
   };
 
   schema = {
-    username: Joi.string().required().label("Username"),
+    email: Joi.string().required().label("Email"),
     password: Joi.string().required().label("Password"),
   };
 
-  doSubmit = () => {
-    try{
-      const resp = await authService.login();
-      localStorage.setItem("email",JSON.stringify(resp.data.username));
+  doSubmit = async () => {
+    try {
+      let resp = await authService.login(
+        this.state.data.email,
+        this.state.data.password
+      );
+      console.log(resp  );
+      localStorage.setItem("email", JSON.stringify(resp.data.email));
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        const errors = { ...this.state.errors };
+        errors = ex.response.data;
+        this.setState({ errors });
+      }
     }
-    catch
-    console.log("Submitted");
   };
 
   render() {
@@ -27,7 +35,7 @@ class LoginForm extends Form {
       <div>
         <h1>Login</h1>
         <form onSubmit={this.handleSubmit}>
-          {this.renderInput("username", "Username")}
+          {this.renderInput("email", "Email")}
           {this.renderInput("password", "Password", "password")}
           {this.renderButton("Login")}
         </form>
